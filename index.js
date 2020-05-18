@@ -1,0 +1,68 @@
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const app = express();
+require('dotenv').config();
+const MongoClient = require('mongodb').MongoClient;
+
+app.use(cors());
+app.use(bodyParser.json());
+
+const uri = process.env.DB_PATH;
+
+app.get('/', (req, res) => {
+  res.send('Yes its working');
+});
+
+app.post('/addProducts', (req, res) => {
+  const product = req.body;
+  console.log(product);
+  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  client.connect((err) => {
+    const collection = client.db('amazon').collection('products');
+    collection.insertMany(product, (err, result) => {
+            if(err){
+                res.status(500).send({message:err})
+            }else{
+                res.send(result.ops[0]);
+            }
+        })
+    //client.close();
+  });
+});
+
+app.get('/products', (req, res) => {
+  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  client.connect((err) => {
+    const collection = client.db('amazon').collection('products');
+    collection.find().toArray((err, result) => {
+            if(err){
+                res.status(500).send({message:err})
+            }else{
+                res.send(result);
+            }
+        })
+    //client.close();
+  });
+})
+
+app.get('/product/:id', (req, res) => {
+  const id = (req.params.id);
+  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  client.connect((err) => {
+    const collection = client.db('amazon').collection('products');
+    collection.find({id:parseInt(id)}).toArray((err, result) => {
+            if(err){
+                res.status(500).send({message:err})
+            }else{
+                res.send(result[0]);
+            }
+        })
+    //client.close();
+  });
+})
+
+
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => console.log('Listening to port 4000'));
