@@ -91,9 +91,6 @@ app.get('/product/:id', (req, res) => {
   });
 });
 
-
-
-
 app.get('/yourOrders/:email', (req, res) => {
   const email = req.params.email;
   console.log(email);
@@ -103,7 +100,7 @@ app.get('/yourOrders/:email', (req, res) => {
   });
   client.connect((err) => {
     const collection = client.db('amazon').collection('orders');
-    collection.find({email}).toArray((err, result) => {
+    collection.find({ email }).toArray((err, result) => {
       if (err) {
         res.status(500).send({ message: err });
       } else {
@@ -114,9 +111,6 @@ app.get('/yourOrders/:email', (req, res) => {
     //client.close();
   });
 });
-
-
-
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log('Listening to port 4000'));
