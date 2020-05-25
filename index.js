@@ -31,6 +31,24 @@ app.post('/addProducts', (req, res) => {
   });
 });
 
+app.post("/placeOrder", (req, res) => {
+  const order = req.body;
+  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  client.connect((err) => {
+    const collection = client.db('amazon').collection('orders');
+    collection.insertOne(order, (err, result) => {
+            if(err){
+                res.status(500).send({message:err})
+            }else{
+              console.log(result.ops[0])
+              res.send(result.ops[0]);
+            }
+        })
+    //client.close();
+  });
+})
+
+
 app.get('/products', (req, res) => {
   const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
   client.connect((err) => {
