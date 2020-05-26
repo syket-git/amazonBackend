@@ -108,7 +108,7 @@ app.get('/yourOrders/:email', (req, res) => {
         console.log(res.send(result));
       }
     });
-    //client.close();
+    client.close();
   });
 });
 
