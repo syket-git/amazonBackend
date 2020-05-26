@@ -91,20 +91,22 @@ app.get('/product/:id', (req, res) => {
   });
 });
 
-app.get('/yourOrders/:email', (req, res) => {
+app.get ('/yourOrders/:email', (req, res) => {
   const email = req.params.email;
-  console.log(email);
+  console.log(email)
   const client = new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
   client.connect((err) => {
-    const collection = client.db('amazon').collection('orders');
-    collection.find({ email }).toArray((err, result) => {
+    const collection =  client.db('amazon').collection('orders');
+     collection.find({ email }).toArray((err, result) => {
       if (err) {
         res.status(500).send({ message: err });
+        console.log(err);
       } else {
         res.send(result);
+        console.log(result);
         console.log(res.send(result));
       }
     });
@@ -112,5 +114,5 @@ app.get('/yourOrders/:email', (req, res) => {
   });
 });
 
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log('Listening to port 4000'));
+const PORT = process.env.PORT || 4400;
+app.listen(PORT, () => console.log('Listening to port 4400'));
