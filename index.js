@@ -91,7 +91,8 @@ app.get('/product/:id', (req, res) => {
   });
 });
 
-app.get ('/yourOrders/:email', (req, res) => {
+
+app.get('/orders/:email', (req, res) => {
   const email = req.params.email;
   console.log(email)
   const client = new MongoClient(uri, {
@@ -99,20 +100,18 @@ app.get ('/yourOrders/:email', (req, res) => {
     useUnifiedTopology: true,
   });
   client.connect((err) => {
-    const collection =  client.db('amazon').collection('orders');
-     collection.find({ email }).toArray((err, result) => {
+    const collection = client.db('amazon').collection('orders');
+    collection.find({ email }).toArray((err, documents) => {
       if (err) {
         res.status(500).send({ message: err });
-        console.log(err);
       } else {
-        res.send(result);
-        console.log(result);
-        console.log(res.send(result));
+        res.send(documents);
       }
     });
     //client.close();
   });
 });
+
 
 const PORT = process.env.PORT || 4400;
 app.listen(PORT, () => console.log('Listening to port 4400'));
